@@ -1,0 +1,38 @@
+  > Original Public Key  [Byte] = 041c2484cca4a6d65b3c7518509d807ee5e25cf21c7d77cad87027f46dd3888beaa0df040a17ff3e9fe3d6117ede6859ffecd1a769d1a860393d84284441bf1aa9 [Lenth] = 65
+  > Original Private Key [Byte] = 00e685dd2fd4465bfd24231da9f983d54ba64df0ac7f2a2d2625f73ec3aca04bdb [Lenth] = 33
+  > 1st Encrypted Private Key [Byte] = 0a7c1f2bd8dfadc707fd683922e693009b87eecc849a6583682d7565eefa601262
+  > 2nd Encrypted Private Key [Byte] = c8c112dd106febacd1c8c752ef7e449c1d21f7614feec45dbb5e9cad6ea435bc2c4da01b370fd32501dd0d6d9f71c191
+  > Deleted ecdsaPrk [BigInterger] = 0
+  > Deleted Private Key [Byte] = 00
+Data For AuthServer DB Storage : CnwfK9jfrccH/Wg5IuaTAJuH7syEmmWDaC11Ze76YBJi$Doa+cjuvTUqh5T4824KQqzXD/840mDhklnilr0CFSNJTDIBXL/GJLLsnouAe7oEO4SycKNaNWaZy4+05d7Z63t4=$4M89IPA2eMv/9KnSP5+bOFqDVUGPgfW0bkElARGeios=
+------------------------------------------------------------------------------------- 
+  > eth Public Key Hash [Byte : 32 ] = 9a3f542090a4f97b2b76aae54ddbc8f67b27028a4dd8e055490f764f19f0f094
+  > eth.Addr [Byte : 32 ] = 4ddbc8f67b27028a4dd8e055490f764f19f0f094
+  > Eth Wallet Addr [Last 20Bytes] = 4ddbc8f67b27028a4dd8e055490f764f19f0f094
+  > Eth Wallet Addr [MoaBase58]    = 25uw38ih8rxv2KqbwhE7RxtT69VM
+  > Hmac Key [Byte : 32 ] = 7eb04faa69c7296f02c53cd37f19341dd39230216462eaa81afe8c3a5e199251
+Wallet Addr [MoaBase58] : 25uw38ih8rxv2KqbwhE7RxtT69VM
+Deleted Password : 
+  > macDataBase58Str : FV4UYbxAjTcH2cr2n43qfjo8bsVM8fCSeeg8bjpJqK7Y
+  > Hmac Key [Byte : 32 ] = 7eb04faa69c7296f02c53cd37f19341dd39230216462eaa81afe8c3a5e199251
+  > newMacDataBase58Str : FV4UYbxAjTcH2cr2n43qfjo8bsVM8fCSeeg8bjpJqK7Y
+  > 2nd Decrypted Private Key [Byte] = 0a7c1f2bd8dfadc707fd683922e693009b87eecc849a6583682d7565eefa601262
+  > 1st Decrypted Private Key [Byte] = 00e685dd2fd4465bfd24231da9f983d54ba64df0ac7f2a2d2625f73ec3aca04bdb
+  > decryptPrivateKeyBytes [Byte : 33 ] = 00e685dd2fd4465bfd24231da9f983d54ba64df0ac7f2a2d2625f73ec3aca04bdb
+  > signature [Byte] = 72 / 304602210081df855fedf59488f25e7c5bd67b6d6e82a33fd7336cb49cc82080a1808c325d022100e7ecca71600bd79ff418a074cddb36c6b9f40f3c354cc1b261d5a941196c15a2
+  > Deleted Private Key [Byte] = 00
+Transaction Sign [Byte : 72 ] = 304602210081df855fedf59488f25e7c5bd67b6d6e82a33fd7336cb49cc82080a1808c325d022100e7ecca71600bd79ff418a074cddb36c6b9f40f3c354cc1b261d5a941196c15a2
+Deleted Password : 
+Transaction Verify Success or Fail : true
+
+
+[*] moaWallet.dat :
+	Version.Info=1
+	OS.Info=Windows 10
+	Wallet.Type=R
+	Salt.Value=G8ZcE4HAzZNGiWLaKcmSxHUjj8HtFHeGmWWssi5Bsy38
+	Iteration.Count=4096
+	Ciphered.Data=8N83eTSLoAfmT5Dny6hhg9UVWBkdHM2SByiu89ScFS2WmhSrYGhVFHBsdUJJauBXhS
+	Wallet.PublicKey=N356ofCR8kbC1vRi6AFtz7oJwau2wyKS41ccPhdBhG3DHDBffnBYm9RDLYyNvwV8KPskvAbbPkzSxdWK9NgbmFh2
+	Wallet.Addr=25uw38ih8rxv2KqbwhE7RxtT69VM
+	MAC.Data=FV4UYbxAjTcH2cr2n43qfjo8bsVM8fCSeeg8bjpJqK7Y

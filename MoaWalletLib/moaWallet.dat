@@ -1,0 +1,9 @@
+Version.Info=1
+OS.Info=Windows 10
+Wallet.Type=NonR
+Salt.Value=EB7JkjgwbNeRwBqV26itHpakC8YehvAtrnDkPCBbzx93
+Iteration.Count=4096
+Ciphered.Data=ALbJsiTz2mKTmTsHkpc2kYoP9wh212Ln3VwX9NbYwpwyZ6MqwB2wZtvoRANTvA6BX3
+Wallet.PublicKey=Mq2sjfZ9iHvgFr9ifLqTYPY9wZAiSjTjr765xA7bK469BEM4SnpiD8JK1Akdv13hDPUx58PtYpjLK8a5xo2MnaHr
+Wallet.Addr=4ZN4X4a2wsdiqqvHAR4tArrc83JE
+MAC.Data=b8CnTQAPX2kVpQiRuRyikAoRuofESPENidpifW4F9Ta

@@ -1,0 +1,33 @@
+[Exit Gen]
+Version.Info=1
+OS.Info=Windows 10
+Wallet.Type=R
+Salt.Value=6ewuUodeQxtVKma4yjBvWyRmDo52eAcLA7r9Xqz69cAd
+Iteration.Count=4096
+Ciphered.Data=8x2FGTJbe3L5Ek7SGZPsxWH6bEig9a2TcZKFYknsDiHZAYpQjADgGdz52pc1YpaXDo
+Wallet.PublicKey=QhiBAPZijbWft9s57Yxh5YuqRaeS9x9qKaTt6B4xxAXLR1A8Kq4qsCnnMDdfnUg6sCpcQYRLWqYeZrDr5BZ5QuWt
+Wallet.Addr=32ttsciSa3pqTLofPPdyZ7pAfwwo
+MAC.Data=4rvTuLLr3pbfAXwuA8g6JdpgqqKZHorbBx16L823rGKG
+
+
+[Temp Gen]
+Version.Info=1
+OS.Info=Windows 10
+Wallet.Type=R
+Salt.Value=FGL3xTKw19ijJHJffAbTD617yRbQABbRom6xigYnfNPL
+Iteration.Count=4096
+Ciphered.Data=4hHGEjJu5TgwMFFm8XbWHDsPSi9ZLNCJ81JA5NwTBembDAnj56UdMz6aZWwEp6Hmic
+Wallet.PublicKey=QhiBAPZijbWft9s57Yxh5YuqRaeS9x9qKaTt6B4xxAXLR1A8Kq4qsCnnMDdfnUg6sCpcQYRLWqYeZrDr5BZ5QuWt
+Wallet.Addr=32ttsciSa3pqTLofPPdyZ7pAfwwo
+MAC.Data=Gj2tK7ULdAZNkJWVKGBJnX1YKDQhWQqvUC6McyuARfvU
+
+[New Gen]
+Wallet.PublicKey=QhiBAPZijbWft9s57Yxh5YuqRaeS9x9qKaTt6B4xxAXLR1A8Kq4qsCnnMDdfnUg6sCpcQYRLWqYeZrDr5BZ5QuWt
+Version.Info=1
+Iteration.Count=4096
+Salt.Value=FGL3xTKw19ijJHJffAbTD617yRbQABbRom6xigYnfNPL
+Ciphered.Data=4hHGEjJu5TgwMFFm8XbWHDsPSi9ZLNCJ81JA5NwTBembDAnj56UdMz6aZWwEp6Hmic
+MAC.Data=Gj2tK7ULdAZNkJWVKGBJnX1YKDQhWQqvUC6McyuARfvU
+OS.Info=Windows 10
+Wallet.Addr=32ttsciSa3pqTLofPPdyZ7pAfwwo
+Wallet.Type=R
