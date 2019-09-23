@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ManagerUnregistTest</title>
+</head>
+
+<body>
+    <h2>Manager Unregist Test</h2>
+    <script type='text/javascript' src='./moaCryptoJS/moaCryptoModule-v1.0.0.min.js'></script>
+    <script type="text/javascript" src="./moaCryptoCoreJS/moaECDSACoreAPI-v1.0.0.min.js"></script>
+    <script type='text/javascript' src="./moaSecurityJS/moaClientCoreAuthLib-v1.0.1.min.js"></script>
+    <script>
+        let idStr = "test6@123.com";
+        document.write("[*] ManagerID : " + idStr + "<br>");
+        document.write("[*] Manager UnRegist(Remove) Start [ Runnable After ID/PSW Login --------------------><br>");
+
+        // 4.1 [Client PC -> ManagerAuthServer] Input ID for UnRegist
+        let unRegistRequestManagerIdMsgGenStr = MoaClientCoreAuthLib.coreIdPswUnRegistRequestMsgGenProcess(idStr);
+        document.write("[**] 4.1 (UnRegist: Client PC -> ManagerAuthServer) managerID UnRegist Request Msg Gen[String] : " + unRegistRequestManagerIdMsgGenStr + "<br>");
+        document.write("-------------------------------------------------------------------------------------<br>");
+
+        // 4.2 [Client PC <- ManagerAuthServer] ID/PSW unRegist Request Parser & unRegist Response Msg Gen
+        // String unRegistManagerIdMsgParserResultStr = moaServerManagerAuthLib.MoaServerManagerAuthMsgPacketParser(unRegistRequestManagerIdMsgGenStr, null); // UnRegist Msg Parser
+
+        document.write("[**] 4.2.0 (UnRegist: Client PC <- ManagerAuthServer) managerID UnRegist Request Msg Parser Result[String] : test6@123.com<br>");
+
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        // ~~~[ AuthDB Process Part : Remove managerID Record in MangerAuthDB ]~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        // String managerIdAuthDBRemoveResultStr = managerAuthDBProcess
+        //         .ManagerAuthDBRemoveRecordProcess(ManagerAuthFileName, unRegistManagerIdMsgParserResultStr);
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        // String unRegistResponseManagerIdMsgStr = moaServerManagerAuthLib.IdPswUnRegistResponseMsgGenProcess(managerIdAuthDBRemoveResultStr);
+
+        document.write("[**] 4.2 (UnRegist: Client PC <- ManagerAuthServer) managerID UnRegist Response Msg Gen[String] : 4D4F413008$0x6050<br>");
+
+        // 4.3 [Only Client PC] ID/PSW unRegist Response Msg Parser
+        let unRegistResponseMsgParserResultStr = MoaClientCoreAuthLib.coreMsgPacketParser("4D4F413008$0x6050");
+        document.write("[**] 4.3 (UnRegist: Client PC) managerID UnRegist Response Msg Parser Result[String] : " + unRegistResponseMsgParserResultStr + "<br>");
+
+        if (unRegistResponseMsgParserResultStr.indexOf("0x6051") === 0)
+            document.write("managerID UnRegist Fail. UnRegist Re-try!");
+        else if (unRegistResponseMsgParserResultStr.indexOf("0x6050") === 0)
+            document.write("managerID UnRegist Success.");
+    </script>
+</body>
+
+</html>

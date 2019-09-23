@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ManagerLoginTest</title>
+</head>
+
+<body>
+    <h2>Manager Login Test</h2>
+    <script type='text/javascript' src='./moaCryptoJS/moaCryptoModule-v1.0.0.min.js'></script>
+    <script type="text/javascript" src="./moaCryptoCoreJS/moaECDSACoreAPI-v1.0.0.min.js"></script>
+    <script type='text/javascript' src="./moaSecurityJS/moaClientCoreAuthLib-v1.0.1.min.js"></script>
+    <script>
+        document.write("[*] Manager Login Start------------------------------------><br>");
+        document.write("[*] Manager Login Select - [1] Admin(X) [2] TopManger(X) [3] GeneralManaer(O) : 3<br>");
+
+        // 2.1 [Only ClientPC] Input ID & PSW (for Login)
+		let idStr = "test6@123.com";
+        document.write("[**] 2.1 (ID/PSW-Login: Client) Manager LogIn ID : "+ idStr + "<br>");
+
+        // 2.2 [Only ClientPC] Input PSW (for Login)
+		let pswStr = "123456";
+        document.write("[**] 2.2 (ID/PSW-Login: Client) Manager LogIn Password : " + pswStr + "<br>");
+
+        // 2.3 [ClientPC -> ManagerAuthServer] ID/PSW LogIn Start Request : {Header}
+        let idPswLogInStartReqMsgGenStr = MoaClientCoreAuthLib.coreIdPswLogInStartRequestMsgGenProcess(); 	// IdPswLogInStartRequestMsgGenProcess
+        document.write("[*] 2.3 (ID/PSW-Login: Client -> ManagerAuthServer) ID/PSW LogIn Satrt Reqest Msg Gen[String] : " + idPswLogInStartReqMsgGenStr + "<br>");
+
+        // 2.4 [Only ManagerAuthServer] ID/PSW LogIn Start Request Parser[NonceBase64Str] - moaMANAGER_IdPswLogInStartReq Msg Parser
+        // String idPswloginStartReqParserResultNonceStr = moaServerManagerAuthLib.MoaServerManagerAuthMsgPacketParser(idPswLogInStartReqMsgStr, null); 
+        document.write("[*] 2.4.0 (ID/PSW-Login: ManagerAuthServer) ID/PSW Login Start Req Msg Parser Result[String] : PvvCObKR7CtfeN3DxjMRjioikkc/oqR9C19bNgrQpVY=<br>");
+
+        // 2.5 [ClientPC <- ManagerAuthServer] ID/PSW LogIN Start Response MSG Gen : {Header$NonceBase64Str}
+        // String idPswLogInStartResMsgStr = moaServerManagerAuthLib.IdPswLoginStartResponseMsgGenProcess(idPswloginStartReqParserResultNonceStr);
+        document.write("[*] 2.5 (ID/PSW-Login: Client <- ManagerAuthServer) ID/PSW LogIn Nonce Msg Gen[String] : 4D4F412002$PvvCObKR7CtfeN3DxjMRjioikkc/oqR9C19bNgrQpVY=<br>");
+
+        // 2.6 [ClientPC -> ManagerAuthServer] ID/PSW LogIN Start Response Msg Parser & ID/PSW LogIn Request MSG Gen
+        let idPswLoginStartResParserResultStr = MoaClientCoreAuthLib.coreMsgPacketParser("4D4F412002$PvvCObKR7CtfeN3DxjMRjioikkc/oqR9C19bNgrQpVY=");
+        document.write("[*] 2.6.0 (ID/PSW-Login: Client) ID/PSW Login Start Request Msg Parser[String] : " + idPswLoginStartResParserResultStr + "<br>");
+
+        // ID/PSW LogIn Request MSG Gen : Header$ManagerIDBase64Str$HashPSWBase64Str$HmacPSWBase64Str$NonceBase64Str
+        //let flag = true;
+        let idPswLogInReqMsgGenStr = MoaClientCoreAuthLib.coreIdPswLogInRequestMsgGenProcess(idStr, pswStr, idPswLoginStartResParserResultStr, true);
+        document.write("[*] 2.6 (ID/PSW-Login: Client -> ManagerAuthServer) PIN LogIn Reqest Msg Gen[String] : " + idPswLogInReqMsgGenStr + "<br>");
+
+        // 2.7 [Only ManagerAuthServer] ID/PSW LogIn - NonceOTP & Manager Auth :
+        // String idPswLoginReqPaserResultStr = moaServerManagerAuthLib.MoaServerManagerAuthMsgPacketParser(idPswLogInReqMsgGenStr, idPswloginStartReqParserResultNonceStr);
+        // StringTokenizer idPswRegistReqST = new StringTokenizer(idPswLoginReqPaserResultStr, "$");
+        // String nonceVefirySFStr = idPswRegistReqST.nextToken();
+        // String managerIdBase64Str = idPswRegistReqST.nextToken();
+        // String hashPswBase64Str = idPswRegistReqST.nextToken();
+        // String hmacPswBase64Str = idPswRegistReqST.nextToken();
+        document.write("[**] Orginal nonceOTP : PvvCObKR7CtfeN3DxjMRjioikkc/oqR9C19bNgrQpVY=<br>");
+        document.write("[**] Recived nonceOTP : PvvCObKR7CtfeN3DxjMRjioikkc/oqR9C19bNgrQpVY=<br>");
+        document.write("[**] Nonce Check Success<br>");
+
+        document.write("[*] 2.7.0 (ID/PSW-Login: ManagerAuthServer) PIN Login Req Msg Parser[String] : 0x6030$dGVzdDZAMTIzLmNvbQ==$laZBn4kXG0bU+wJs8IXWCxSTL9LRxk7yPIjFK8HdKQc=$HlHlbAZGvuZVx2bUcQBIxByyJTueietqEu4HucAlX1c=<br>");
+        // if (nonceVefirySFStr.equals("0x6031")) {
+        //     System.out.println("Error ---> Nonce Verify Failure. ID & PSW LogIn Progress Stop!");
+        //     return;
+        // }
+
+        // ~~~[ AuthDB Replace Part ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        // String serverManagerLevelAndSaltAndCipheredBase64Str = managerAuthDBProcess.ManagerAuthDBGetProcess(managerIdBase64Str);
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        /*
+        * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        * AuthDB에서 ManagerID, SaltBase4Str, CipheredPswBase64Str Get : 실제 DB 연동하여 ManagerID 존재 유무 확인 후 가져오기
+        * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        * AuthVo pinLoginAuthDBrecord = moaServerAuthDBLib.getUserAuth(new String(Base64.decode(managerIdBase64Str))); 
+        * if (pinLoginAuthDBrecord == null) { // ID Not Found
+        *     System.out.println("ID(e-mail) not exists. PIN Login Progress Stop!"); 
+        *     return "00000000"; 
+        * } 
+        * String authDBSaltBase64Str = pinLoginAuthDBrecord.getSalt(); // SaltBase64 Read 
+        * String authDBCipheredPswBase64Str = pinLoginAuthDBrecord.getCipheredPsw(); // CipheredPSWBase64 Read
+        * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        */
+
+        // String managerLoginAuthVerifySFStr = null;
+        // String authDBManagerLevelStr = null;
+        // if (serverManagerLevelAndSaltAndCipheredBase64Str == null) { // if ManagerID not Exist in Manager
+        //                                                                 // AuthDB, Login Fail Process
+        //     managerLoginAuthVerifySFStr = "0x6041";
+        //     System.out.println(
+        //             "Error ---> Manager ID is not found in the Manager AUthDB. ID & PSW Re-LogIn Start!");
+        //     continue;
+        // } else {
+        //     StringTokenizer serverAutnDBGetST = new StringTokenizer(
+        //             serverManagerLevelAndSaltAndCipheredBase64Str, "$");
+        //     authDBManagerLevelStr = serverAutnDBGetST.nextToken();
+        //     String authDBSaltBase64Str = serverAutnDBGetST.nextToken();
+        //     String authDBCipheredPswBase64Str = serverAutnDBGetST.nextToken();
+
+        //     String cipheredPswBase64Str = moaServerManagerAuthLib
+        //             .ManagerIdPswLogInAuthInfoGen(authDBSaltBase64Str, hashPswBase64Str, hmacPswBase64Str);
+        //     if (cipheredPswBase64Str.equals(authDBCipheredPswBase64Str)) {
+        //         managerLoginAuthVerifySFStr = "0x6040"; // manager LogIn Success
+        //     } else {
+        //         managerLoginAuthVerifySFStr = "0x6041"; // Manager LogIN Fail
+        //         System.out.println("Error ---> Manager ID & PSW Login Auth Fail. Re-LogIn Start!");
+        //         continue;
+        //     }
+        // }
+
+        // 2.8 [ClientPC <- ManagerAuthServer] Manager ID/PSW LogIn Result Msg Gen
+        // String idPswLoginResMsgStr = moaServerManagerAuthLib.ManagerIdPswLogInResponseMsgGenProcess(
+        // 					            nonceVefirySFStr, managerLoginAuthVerifySFStr, authDBManagerLevelStr);
+        document.write("[*] 2.8 (ClientPC <- ManagerAuthServer) ID & PSW Login Res Msg Gen[String] : 4D4F412014$0x6030$0x6040$0x63<br>");
+
+        // 2.9 [Only ClientPC] Manager ID/PSW LogIn Success & Fail Result Parser
+        let idPswManagerLoginResultStr = MoaClientCoreAuthLib.coreMsgPacketParser("4D4F412014$0x6030$0x6040$0x63");
+        document.write("[*] 2.9 (ClientPC) ID & PSW ID & Psw Login Result Parser[String] : " + idPswManagerLoginResultStr + "<br>");
+
+        let managerAuthMsgSplit = idPswManagerLoginResultStr.split('$');
+        let nonceVerify     =  managerAuthMsgSplit[0];
+        let managerAuth     =  managerAuthMsgSplit[1];
+        let managerLevel    =  managerAuthMsgSplit[2]; // ManagerLevel of AdminID/TopManagerID/GeneralMangerID Login(Using Regist)                                       // GeneralMangerID Login(Using Regist)
+
+        if (nonceVerify.indexOf("0x6030") === 0 && managerAuth.indexOf("0x6040") === 0) // User Auth Check
+            document.write("[*] User Auth Success");
+        else
+            docuemnt.write("[*] User Auth Failure");
+    </script>
+</body>
+
+</html>

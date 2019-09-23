@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Save Restore Wallet</title>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script type='text/javascript' src='./moaCryptoJS/moaCryptoModule-v1.0.0.min.js'></script>
+    <script type='text/javascript' src='./moaCryptoCoreJS/moaECDSACoreAPI-v1.0.0.min.js'></script>
+    <script type="text/javascript" src="./moaSecurityJS/MoaClientCoreAuthLib-v1.0.1.min.js"></script>
+    <script type="text/javascript" src="./moaSecurityJS/moaBCWalletLib-v1.0.2.min.js"></script>
+    <script>
+        // 5.1 지갑 등록 메시지 생성 시 필요한 데이터 생성 (hmacEncryptedPuk % wPrk $ wPuk $ Salt)
+        const restoreMsg = MoaWallet.generateRestoreDataFormat(MoaWallet.getHmacPsw("111111"));
+        // 5.2 지갑 등록 요청 메시지 생성
+        const walletRegisterMsg = MoaClientCoreAuthLib.generateWalletRegistMsg(
+            "testtest",
+            MoaWallet.getEncryptedHmacPsw(
+                "testtest",
+                "111111",
+                "20190626"
+            ),
+            restoreMsg
+        );
+        $(function () {
+            $("#registWallet").click(function () {
+                url = "http://yea1202.synology.me:8090/testweb/FranchiseWallet";
+                $.ajax({
+                    type: "POST"
+                    , url: url
+                    , dataType: "text"
+                    // 5.2.1 지갑 등록 요청 메시지 전달 (Client -> Server)
+                    , data: walletRegisterMsg
+                    , cache: false
+                    , success: function (data, status, xhr) {
+                        // 5.5 지갑 등록 처리 여부 관련 메시지 전달 (Server -> Client)                        
+                        if (MoaClientCoreAuthLib.verifyRegisterWalletMsg(data)) {
+                            // 5.6 서버에서 지갑 등록 처리 완료 시, 클라이언트에 복원형 지갑 생성
+                            let pswForSign = MoaWallet.getHmacPsw("111111");
+                            const splitMsg = restoreMsg.split('%');
+                            MoaWallet.createRestoreWallet(pswForSign, splitMsg[1]);
+
+                            // 서명 생성 및 검증 테스트 시작
+                            const transaction = "It is 10000$ payment Alice to Bob";
+                            const sign = MoaWallet.generateTransactionSign(transaction, pswForSign);
+                            document.write("Transaction Sign [HexString : " + sign.length + " ] = " + sign.toString() + "<br>");
+
+                            pswForSign = ""; // Password Delete in Memory
+                            document.write("Deleted Password : " + pswForSign + "<br>");
+
+                            const puk = MoaWallet.getPublicKey();
+
+                            const isVerify = MoaWallet.verifyTransactionSign(transaction, sign, puk);
+                            document.write("Transaction Verify Success or Fail : " + isVerify);
+                            // 서명 생성 및 검증 테스트 완료
+
+                            $("#listLayout").html("지갑 생성 성공!");
+                        } else {
+                            $("#listLayout").html("지갑 생성 실패!");
+                        }
+                    }
+                    , error: function (xhr, status, error) {
+                        alert("error : " + error);
+                    }
+                });
+            })
+        });
+
+        // 6.1 본인 인증 요청
+        // 6.2 본인 인증 성공 시 지갑 복원 요청 메시지 생성
+        const restoreReqMsg = MoaClientCoreAuthLib.generateRestoreWalletMsg("testtest");
+        $(function () {
+            $("#restoreWallet").click(function () {
+                url = "http://yea1202.synology.me:8090/testweb/FranchiseWallet";
+                $.ajax({
+                    type: "POST"
+                    , url: url
+                    , dataType: "text"
+                    // 6.2.1 지갑 복원 요청 메시지 전달 (Client -> Server)
+                    , data: restoreReqMsg
+                    , cache: false
+                    , success: function (data, status, xhr) {
+                        // 6.4 메시지 검증 실패 시 Return
+                        if (!MoaClientCoreAuthLib.verifyRestoreWalletMsg(data)) {
+                            $("#listLayout").html("지갑 복원 실패");
+                            return;
+                        }
+                        // 6.5 지갑 복원 요청 처리 여부 관련 메시지 전달 (Server -> Client)
+                        if (MoaWallet.verifyPsw(MoaWallet.getHmacPsw("111111"), data)) {
+                            // 6.6 서버에서 전달받은 지갑 복원 요청 메시지를 통하여 클라이언트에 복원형 지갑 생성
+                            MoaWallet.createRestoreWallet(MoaWallet.getHmacPsw("111111"), MoaWallet.convertRestoreDataFormat(data));
+
+                            // 서명 생성 및 검증 테스트 시작
+                            let pswForSign = MoaWallet.getHmacPsw("111111");
+
+                            const transaction = "It is 10000$ payment Alice to Bob";
+                            const sign = MoaWallet.generateTransactionSign(transaction, pswForSign);
+                            document.write("Transaction Sign [HexString : " + sign.length + " ] = " + sign.toString() + "<br>");
+
+                            pswForSign = ""; // Password Delete in Memory
+                            document.write("Deleted Password : " + pswForSign + "<br>");
+
+                            const puk = MoaWallet.getPublicKey();
+
+                            const isVerify = MoaWallet.verifyTransactionSign(transaction, sign, puk);
+                            document.write("Transaction Verify Success or Fail : " + isVerify);
+                            // 서명 생성 및 검증 테스트 완료
+                            $("#listLayout").html("지갑 복원 성공");
+                        } else {
+                            $("#listLayout").html("지갑 복원 실패");
+                            return;
+                        }
+
+                    }
+                    , error: function (xhr, status, error) {
+                        alert("error : " + error);
+                    }
+                });
+            })
+        });
+    </script>
+</head>
+
+<body>
+    <input type="button" id="registWallet" value="regist" /> <br />
+    <input type="button" id="restoreWallet" value="restore" /> <br />
+    <div id="listLayout"></div>
+</body>
+
+</html>

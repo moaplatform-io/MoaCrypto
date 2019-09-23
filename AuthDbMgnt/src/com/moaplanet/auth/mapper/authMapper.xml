@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.moaplanet.auth.dto">
+
+<!-- 
+
+    <delete id="remove" parameterType="java.lang.String">
+
+        delete from members where id=#{id}
+
+    </delete>
+
+ -->
+
+
+    <insert id="addAuthInfo" parameterType="AuthVo">
+
+        INSERT INTO TB_AUTH (
+	        			MEMBER_ID
+						,AMI
+						,CKMI
+						,SALT
+						,CIPHERED_PWD
+						,AUTH_TOKEN
+						,PUBLIC_KEY
+						,AUTH_FAIL_CNT
+						,CIPHERED_WPSW
+						,CIPHERED_WPRK
+						,CIPHERED_WPUK_WSALT
+						,CREATE_DT
+						,LAST_MODIFIED_DT	
+        			)VALUES
+        				(#{member_id       }
+						,#{ami             }
+						,#{ckmi            }
+						,#{salt            }
+						,#{ciphered_pwd    }
+						,#{auth_token      }
+						,#{public_key      }
+						,#{auth_fail_cnt   }
+						,#{ciphered_wpsw   }
+						,#{ciphered_wprk   }
+						,#{ciphered_wpuk_wsalt}
+						,CURRENT_TIMESTAMP(3)
+						,CURRENT_TIMESTAMP(3)
+						)
+    </insert>
+
+
+    <insert id="addAuthInfoHist" parameterType="AuthVo">
+        INSERT INTO TB_AUTH_HIST
+					(MEMBER_ID
+					,AMI
+					,CKMI
+					,SALT
+					,CIPHERED_PWD
+					,AUTH_TOKEN
+					,PUBLIC_KEY
+					,AUTH_FAIL_CNT
+					,CIPHERED_WPSW
+					,CIPHERED_WPRK
+					,CIPHERED_WPUK_WSALT
+					,CREATE_DT
+					,LAST_MODIFIED_DT
+					,HIST_CREATE_DATE
+					,MOAPAY_PWD
+					)
+ 		SELECT  MEMBER_ID
+				,AMI
+				,CKMI
+				,SALT
+				,CIPHERED_PWD
+				,AUTH_TOKEN
+				,PUBLIC_KEY
+				,AUTH_FAIL_CNT
+				,CIPHERED_WPSW
+				,CIPHERED_WPRK
+				,CIPHERED_WPUK_WSALT
+				,CREATE_DT
+				,LAST_MODIFIED_DT
+				,CURRENT_TIMESTAMP(3)
+				,MOAPAY_PWD 
+       	  FROM TB_AUTH  
+       	 WHERE MEMBER_ID = #{member_id} 
+    </insert>
+
+  
+    <select id="getAuthInfo" parameterType="String" resultType="AuthVo">
+        SELECT * FROM TB_AUTH
+         WHERE MEMBER_ID=#{member_id}
+    </select>
+
+    <update id="updateAuthInfo" parameterType="AuthVo">
+		UPDATE TB_AUTH SET 
+			 AMI              = #{ami             }
+			,CKMI             = #{ckmi            }
+			,SALT             = #{salt            }
+			,CIPHERED_PWD     = #{ciphered_pwd    }
+			,AUTH_TOKEN       = #{auth_token      }
+			,PUBLIC_KEY       = #{public_key      }
+			,AUTH_FAIL_CNT    = #{auth_fail_cnt   }
+			,LAST_MODIFIED_DT = CURRENT_TIMESTAMP(3)
+			,CIPHERED_WPSW	  = #{ciphered_wpsw}
+			,CIPHERED_WPRK    = #{ciphered_wprk}
+			,CIPHERED_WPUK_WSALT = #{ciphered_wpuk_wsalt}
+			,MOAPAY_PWD       = #{moapay_pwd}
+		WHERE MEMBER_ID= #{member_id}
+    </update>
+    
+    <delete id="deleteAuthInfo" parameterType="AuthVo">
+    	DELETE FROM TB_AUTH WHERE MEMBER_ID = #{member_id}
+    
+    </delete>
+
+</mapper>

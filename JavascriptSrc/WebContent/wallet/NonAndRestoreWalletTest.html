@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Test</title>
+</head>
+
+<body>
+    <script type='text/javascript' src='./moaCryptoJS/moaCryptoModule-v1.0.0.min.js'></script>
+    <script type="text/javascript" src="./moaCryptoCoreJS/moaECDSACoreAPI-v1.0.0.min.js"></script>
+    <script type="text/javascript" src="./moaSecurityJS/moaBCWalletLib-v1.0.2.min.js"></script>
+    <script>
+        // 1.1 Set Type (Restore)
+        MoaWallet.setType(MoaWallet.TYPE_RESTORE);
+        document.write("Set Mode : " + MoaWallet.TYPE_RESTORE + "<br>");
+        document.write("TEST [Wallet PUK : " + MoaWallet.getPublicKey() + "]<br>");
+
+        document.write("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<br>");
+        document.write("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[moaRestoreWallet KeyPair Load, Transaction Sign & Verify]~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<br>");
+
+        // 2.1 Password Input for Decrypt to the WPRK of moaWallet
+        let pswForSign = MoaWallet.getHmacPsw("zxcv%$#@!123456");
+
+        // 2.2 Transaction Sign Using WPRK : 거래 데이터 서명
+        let transaction = "It is 10000$ payment Alice to Bob";
+        let sign = MoaWallet.generateTransactionSign(transaction, pswForSign);
+        document.write("Transaction Sign [HexString : " + sign.length + " ] = " + sign.toString() + "<br>");
+
+        pswForSign = ""; // Password Delete in Memory
+        document.write("Deleted Password : " + pswForSign + "<br>");
+
+        // 2.3 PublicKey Get for BlochChain
+        let puk = MoaWallet.getPublicKey();
+
+        // 2.4 Transaction Verify for Block Chain : 서명된 거래 데이터 검증
+        let isVerify = MoaWallet.verifyTransactionSign(transaction, sign, puk);
+        document.write("Transaction Verify Success or Fail : " + isVerify + "<br>");
+
+
+        // 3.1 Set Type (NonRestore)
+        MoaWallet.setType(MoaWallet.TYPE_NORMAL);
+        document.write("Set Mode : " + MoaWallet.TYPE_NORMAL + "<br>");
+        document.write("TEST [Wallet PUK : " + MoaWallet.getPublicKey() + "]<br>");
+
+        document.write("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<br>");
+        document.write("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[moaNonRestoreWallet KeyPair Load, Transaction Sign & Verify]~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<br>");
+
+        // 4.1 Password Input for Decrypt to the WPRK of moaWallet
+        pswForSign = "zxcv%$#@!123456";
+
+        // 4.2 Transaction Sign Using WPRK : 거래 데이터 서명
+        transaction = "It is 10000$ payment Alice to Bob";
+        sign = MoaWallet.generateTransactionSign(transaction, pswForSign);
+        document.write("Transaction Sign [HexString : " + sign.length + " ] = " + sign.toString() + "<br>");
+
+        pswForSign = ""; // Password Delete in Memory
+        document.write("Deleted Password : " + pswForSign + "<br>");
+
+        // 4.3 PublicKey Get for BlochChain
+        puk = MoaWallet.getPublicKey();
+
+        // 4.4 Transaction Verify for Block Chain : 서명된 거래 데이터 검증
+        isVerify = MoaWallet.verifyTransactionSign(transaction, sign, puk);
+        document.write("Transaction Verify Success or Fail : " + isVerify);
+    </script>
+</body>
+
+</html>

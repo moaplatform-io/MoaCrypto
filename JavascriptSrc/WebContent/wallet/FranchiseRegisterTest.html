@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>FranchiseRegisterTest</title>
+</head>
+
+<body>
+    <h2>Franchise Register Test</h2>
+    <script type='text/javascript' src='./moaCryptoJS/moaCryptoModule-v1.0.0.min.js'></script>
+    <script type="text/javascript" src="./moaCryptoCoreJS/moaECDSACoreAPI-v1.0.0.min.js"></script>
+    <script type='text/javascript' src="./moaSecurityJS/moaClientCoreAuthLib-v1.0.1.min.js"></script>
+    <script>
+        document.write("[*] Franchise Regist Start------------------------------------><br>");
+        document.write("[*] Franchise Regist Select - [1] Regist(O) : 1<br>");
+
+        // 1.1 [Only Client PC] Input ID & PSW (for Regist)
+		let idStr = "test6@123.com";
+        document.write("[*] 1.1 (FranchiseID/PSW-R: Client) Regist ID : " + idStr + "<br>");
+
+        // 1.2 [Only Client PC] Input PSW (for Regist)
+		let pswStr = "123456";
+        document.write("[**] 1.2 (FranchiseID/PSW-R: Client) Regist Password : " + pswStr + "<br>");
+
+        // 1.3 [Client PC -> FranchiseAuthServer] ID Exist (for Resigt)
+        let idExistMsgStr = MoaClientCoreAuthLib.coreIdExistRegistRequestMsgGenProcess(idStr);
+        document.write("[**] 1.3 (FranchiseID/PSW-R: Client PC -> FranchiseAuthServer) ID Exist Msg Gen[String] : " + idExistMsgStr + "<br>");
+        document.write("-------------------------------------------------------------------------------------<br>");
+
+        // 1.4.0.1 [Only FranchiseAuthServer] ID Exist check - True or False(Not Exist)
+        // String idExistMsgParserResultStr = moaServerFranchiseAuthLib.MoaServerFranchiseAuthMsgPacketParser(idExistMsgStr, null);
+        document.write("[**] 1.4.0.1 (FranchiseID/PSW-R: FranchiseAuthServer) ID Exist Msg Parser[String] : test6@123.com<br>");
+
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        // 1.4.0.2 [Only FranchiseAuthServer] Search FranchiseID in Franchise AuthDB <0x6010 or 0x6011>
+        // String idExistAuthDBSearchResultStr = FranchiseAuthDBProcess.FranchiseAuthDBSearchProcess(idExistMsgParserResultStr); // DB Replace Part
+        document.write("[**] 1.4.0.2 (FranchiseID/PSW-R: FranchiseAuthServer) Searh Result of ID Exist in Franchise AuthDB[String] : 0x6011<br>");
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        /*
+        * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        * AuthDB에서 ID Exist Check() : 실제 DB에 연동하여 FranchiseID 존재 유무 확인 필요 Get [실제로 1.4.0.2 대체할 DB 연동 부분]
+        * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+        * AuthVo authDBIdRecordRead = moaServerAuthDBLib.getUserAuth(idExistMsgParserResultStr);
+        * 
+        * String idExistFlagStr = "0x6010"; 
+        * if (authDBIdRecordRead == null)   // ID Not Found 
+        * { 
+        *     System.out.println("DB Object Not Gen"); 
+        *     resultStr = "0x6011";         // idExistFlag = "0" 
+        * } else {
+        *     System.out.println("ID(e-mail) exists. ID & PSW Regist Progress Stop!");
+        *     resultStr = "0x6010"; 
+        * }
+        * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        */
+
+        // if (idExistAuthDBSearchResultStr.equals("0x6010")) {
+        // 		System.out.println("Error ---> Franchise AUthDB is ID Exist. Resigtration Running Stop!");
+        // 		continue;
+        // 	}
+
+        // 1.4 [Client PC <- FranchiseAuthServer] ID Exist Yes or No Result
+        // String idExistAckMsgStr = moaServerFranchiseAuthLib.IdExistAckMsgGenProcess(idExistAuthDBSearchResultStr); // No ID Exist
+        document.write("[**] 1.4 (FranchiseID/PSW-R: Client PC <- FranchiseAuthServer) ID Exist Ack Msg Gen[String] : 4D4F410002$0x6011<br>");
+
+        document.write("-------------------------------------------------------------------------------------<br>");
+
+        // 1.5.0 [Client PC -> FranchiseAuthServer] ID/PSW Regist Request (for Regist)
+        let idExistAckParserResultStr = MoaClientCoreAuthLib.coreMsgPacketParser("4D4F410002$0x6011");
+        document.write("[**] 1.5.0 (FranchiseID/PSW-R: FranchiseAuthServer) ID Exist Ack Result Parser[String] : " + idExistAckParserResultStr + "<br>");
+        if (idExistAckParserResultStr.indexOf("0x6010") == 0)
+            document.write("Error ---> Franchise ID(e-mail) exist. ID & PSW Register Progress Stop!<br>");
+        let idPswRegReqMsgGenStr = MoaClientCoreAuthLib.coreIdPswRegistRequestMsgGenProcess(null, idStr, pswStr);
+        document.write("[**] 1.5 (FranchiseID/PSW-R: Client PC -> FranchiseAuthServer) ID/PSW Reg Req Msg Gen[String] : " + idPswRegReqMsgGenStr + "<br>");
+        document.write("-------------------------------------------------------------------------------------<br>");
+
+        // 1.6.0 [Only FranchiseAuthServer] User Auth DB(File) Storage -----> MoaAuthDao.jar Replace 모듈로 대체
+        // PIN Regist Request Parser : Ciphered Id/Psw 32Byte Compute
+        // String idPswRegReqMsgParserResultStr = moaServerFranchiseAuthLib.MoaServerFranchiseAuthMsgPacketParser(idPswRegReqMsgGenStr, null); 
+        document.write("[**] 1.6.0 (FranchiseID/PSW-R: FranchiseAuthServer) ID/PSW Reg Req Msg Parser[String] : dGVzdDZAMTIzLmNvbQ==$pWNiS6bj+aRg+wXjY8uYA8O9ocS8n4bjBJ0iyVkTXNA=$3gaSOPclnC1Hh5pel0/h6WXDf4F0GIcuZvGiwarWA2X4Ftt1WVpxUr1/PqDPzumYkhNnI4wee1RoFyt1LF4F/Q==<br>");
+
+        // StringTokenizer idPswRegistReqST = new StringTokenizer(idPswRegReqMsgParserResultStr, "$");
+        // String FranchiseLevelStr = idPswRegistReqST.nextToken();
+        // String FranchiseIdBase64Str = idPswRegistReqST.nextToken();
+        // String saltBase64Str = idPswRegistReqST.nextToken();
+        // String cipheredPswBase64Str = idPswRegistReqST.nextToken();
+        // String FranchiseIDStr = new String(Base64.decode(FranchiseIdBase64Str));
+
+        // Franchise AuthDB에 FranchiseLevel, FranchiseID, SaltBase64Str, CipheredPswBase64Str Insert
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        // String FranchiseAuthDBRecordDataGenStr = FranchiseAuthDBProcess.FranchiseAuthDBAddProcess(FranchiseLevelStr, FranchiseIDStr, saltBase64Str, cipheredPswBase64Str, 0);
+        // String FranchiseAuthDBAddResultStr = FranchiseAuthDBProcess.FranchiseAuthDBFileStorageProcess(FranchiseAuthDBRecordDataGenStr);
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        /*
+        * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+        * Franchise AuthDB에 FranchiseLevel, FranchiseID, SaltBase64Str, CipheredPswBase64Str Insert
+        * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        * AuthVo authDBPinFieldAdd = new AuthVo();  // MoaMangerAuthDao.jar Call(DB) 
+        * authDBPinFieldAdd.setFranchiseLevel("0x62");
+        * authDBPinFieldAdd.setFranchiseId(FranchiseIDStr);
+        * authDBPinFieldAdd.setSalt(saltBase64Str);
+        * authDBPinFieldAdd.setCipheredPsw(cipheredPswBase64Str);
+        * authDBPinFieldAdd.setAuthFailCount(0);
+        * authDBPinFieldAdd.setLastModifiedDt(authDBPinFieldAdd.getLast_modified_dt());
+        * FranchiseAuthDBAddResultStr =
+        * moaServerAuthDBLib.addUserAuth(authDBPinFieldAdd);
+        * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        */
+        // if (FranchiseAuthDBAddResultStr.equals("0x6021")) {
+        //     System.out.println("Error ---> ID & PSW Registration Falil. ID & PSW Regist Progress Stop!");
+        //     return;
+        // }
+
+        // 1.6 [Client PC <- FranchiseAuthServer] ID/PSW Regist Response
+        // String idPswRegResStr = moaServerFranchiseAuthLib.IdPswRegistResponseMsgGenProcess(FranchiseAuthDBAddResultStr); // '0x6020' Regist Success
+        document.write("[**] 1.6 (FranchiseID/PSW-R: Client PC <- FranchiseAuthServer) ID/PSW RegRes Msg Gen[String] : 4D4F410004$0x6020<br>");
+        document.write("-------------------------------------------------------------------------------------<br>");
+
+        // 1.7 [OnlyClient PC] : Next Job Process after ID/PSW Regist Result Confirm
+        let idPswRegResParserResultStr = MoaClientCoreAuthLib.coreMsgPacketParser('4D4F410004$0x6020');
+        document.write("[**] 1.7.0 (FranchiseID/PSW-R: Client PC ) ID/PSW Reg Res Result Parser[String] : " + idPswRegResParserResultStr + "<br>");
+        if (!idPswRegResParserResultStr.indexOf("0x6021")) { // Client PC Local Member-ID storage :
+            // moaFranchiseID.dat { FranchiseID="FranchiseID" }
+            document.write("Error >> ID & PSW Registration Fail. ID & PSW Regist Pe-Progress<br>");
+        } else {
+            document.write("[**] 1.7 (FranchiseID/PSW-R: Client PC ) ID/PSW Regist Success<br>");
+            let FranchiseIDInfo = "moaFranchiseID=" + idStr;
+            document.write("moaFranchiseID.dat [String] : " + FranchiseIDInfo + "<br>");
+            document.write("-------------------------------------------------------------------------------------<br>");
+        }
+    </script>
+</body>
+
+</html>

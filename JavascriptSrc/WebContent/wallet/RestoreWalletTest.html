@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Test</title>
+</head>
+
+<body>
+    <script type='text/javascript' src='./moaCryptoJS/moaCryptoModule-v1.0.0.min.js'></script>
+    <script type="text/javascript" src="./moaCryptoCoreJS/moaECDSACoreAPI-v1.0.0.min.js"></script>
+    <script type="text/javascript" src="./moaSecurityJS/moaBCWalletLib-v1.0.2.min.js"></script>
+    <script>
+        // 1.1 Password Input for Encrypt to the moaWallet KeyPair
+        let psw = MoaWallet.getHmacPsw("zxcv%$#@!123456");
+
+        // 1.2 ECDSA KeyPair & WalletAddr Gen for BlockChain
+        const restoreData = MoaWallet.generateRestoreDataFormat(psw);
+        const splitMsg = restoreData.split('%');
+        document.write("Data for AuthServer DB Storage : " + restoreData + "<br>");
+        MoaWallet.createRestoreWallet(psw, splitMsg[1]);
+
+        // 1.3 walletAddr Get for BlochChain
+        const walletAddr = MoaWallet.getWalletAddr();
+        document.write("Wallet Addr [HexString] : " + walletAddr + "<br>");
+
+        psw = ""; // Password Delete in Memory
+        document.write("Deleted Password : " + psw + "<br>");
+
+        document.write("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<br>");
+        document.write("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[moaWallet KeyPair Load, Transaction Sign & Verify]~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<br>");
+
+        // 2.1 Password Input for Decrypt to the WPRK of moaWallet
+        let pswForSign = MoaWallet.getHmacPsw("zxcv%$#@!123456");
+
+        // 2.2 Transaction Sign Using WPRK : 거래 데이터 서명
+        const transaction = "It is 10000$ payment Alice to Bob";
+        const sign = MoaWallet.generateTransactionSign(transaction, pswForSign);
+        document.write("Transaction Sign [HexString : " + sign.length + " ] = " + sign.toString() + "<br>");
+
+        pswForSign = ""; // Password Delete in Memory
+        document.write("Deleted Password : " + pswForSign + "<br>");
+
+        // 2.3 PublicKey Get for BlochChain
+        const puk = MoaWallet.getPublicKey();
+
+        // 2.4 Transaction Verify for Block Chain : 서명된 거래 데이터 검증
+        const isVerify = MoaWallet.verifyTransactionSign(transaction, sign, puk);
+        document.write("Transaction Verify Success or Fail : " + isVerify);
+    </script>
+</body>
+
+</html>

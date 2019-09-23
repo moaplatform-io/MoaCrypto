@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ManagerChangePswTest</title>
+</head>
+
+<body>
+    <h2>Manager Change Psw Test</h2>
+    <script type='text/javascript' src='./moaCryptoJS/moaCryptoModule-v1.0.0.min.js'></script>
+    <script type="text/javascript" src="./moaCryptoCoreJS/moaECDSACoreAPI-v1.0.0.min.js"></script>
+    <script type='text/javascript' src="./moaSecurityJS/moaClientCoreAuthLib-v1.0.1.min.js"></script>
+    <script>
+		let idStr = "test6@123.com";
+        document.write("[*] ManagerID : " + idStr + "<br>");
+        document.write("[*] Manager Password Change Start [ Runnable After ID/PSW Login --------------------><br>");
+
+        // 3.1 [Client PC] Exist Psw & Change(new) Psw Input
+		let currentPswStr = "123456";
+		let changePswStr  = "111111";
+        document.write("[*] 3.1.0 Current PSW Input : " + currentPswStr + "<br>");
+        document.write("[*] 3.1.1 Change PSW Input  : " + changePswStr + "<br>");
+
+        // 3.2 [Client PC -> ManagerAuthServer] Auto MangerID Load, IdPsw Change Request
+        // Msg Gen(Exist Psw -> New Psw Change)
+        let changePswRequestManagerIdMsgGenStr = MoaClientCoreAuthLib.coreIdPswChangePswRequestMsgGenProcess(idStr, currentPswStr, changePswStr);
+        document.write("[**] 3.2 (ChangePSW: Client PC -> ManagerAuthServer) managerID Change PSW Request Msg Gen[String] : " + changePswRequestManagerIdMsgGenStr + "<br>");
+        document.write("-------------------------------------------------------------------------------------<br>");
+
+        // 3.3 [Client PC <- ManagerAuthServer] ID/PSW Change PSW Request Parser & Change PSW Response Msg Gen
+        // String changePswRequestMsgParserResultStr = moaServerManagerAuthLib
+        //         .MoaServerManagerAuthMsgPacketParser(changePswRequestManagerIdMsgStr, null); // Change PSW Msg Parser
+        document.write("[**] 3.3.0 (ChangePSW: ManagerAuthServer) [managerID] Change PSW Request Msg Parser Result[String] : dGVzdDZAMTIzLmNvbQ==$laZBn4kXG0bU+wJs8IXWCxSTL9LRxk7yPIjFK8HdKQc=$HlHlbAZGvuZVx2bUcQBIxByyJTueietqEu4HucAlX1c=$NVc4z3DRh92tTyJo3n8FKZ1i7V9caysVttUtNlMaK/E=$4CyEyhaYbBWvT7JA28v6+IOJ0ivGNChAkL1WIXuwQC8=<br>");
+
+        // StringTokenizer changePswReqParserResultST = new StringTokenizer(changePswRequestMsgParserResultStr, "$");
+        // String managerIdBase64Str = changePswReqParserResultST.nextToken();
+        // String currentHashPswBase64Str = changePswReqParserResultST.nextToken();
+        // String currentHmacPswBase64Str = changePswReqParserResultST.nextToken();
+        // String newHashPswBase64Str = changePswReqParserResultST.nextToken();
+        // String newHmacPswBase64Str = changePswReqParserResultST.nextToken();
+
+        // // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        // // ~~~[ AuthDB Process Part : Get MangerLevle, Salt and CipheredPsw of managerID Record in MangerAuthDB ]~~~~~~~~~~~~
+        // String managerAuthDBRecordDataGenStr = managerAuthDBProcess.ManagerAuthDBGetProcess(managerIdBase64Str);
+        // StringTokenizer serverAutnDBGetST = new StringTokenizer(managerAuthDBRecordDataGenStr, "$");
+        // String authDBManagerLevelStr = serverAutnDBGetST.nextToken();
+        // String authDBSaltBase64Str = serverAutnDBGetST.nextToken();
+        // String authDBCipheredPswBase64Str = serverAutnDBGetST.nextToken();
+        // // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        // String currentPswVerifySFStr = null;
+        // String currentCipheredPswBase64Str = moaServerManagerAuthLib.ManagerIdPswLogInAuthInfoGen(authDBSaltBase64Str, currentHashPswBase64Str, currentHmacPswBase64Str);
+        // if (currentCipheredPswBase64Str.equals(authDBCipheredPswBase64Str)) {
+        //     currentPswVerifySFStr = "0x6060"; // PSW Verify Success of manager ID
+        // } else {
+        //     currentPswVerifySFStr = "0x6061"; // PSW Verify Fail of manager ID
+        //     System.out.println("Error ---> ManagerID has not Input of Current PSW. Current Psw Re-Input!");
+        // }
+
+        // String newCipheredUpdateSFStr = null;
+        // if (currentPswVerifySFStr.equals("0x6060")) {
+        //     String newCipheredPswBase64Str = moaServerManagerAuthLib.ManagerIdPswLogInAuthInfoGen(
+        //             authDBSaltBase64Str, newHashPswBase64Str, newHmacPswBase64Str);
+        document.write("newCipheredPswBase64Str : 8c9x3HQRz8VE854xfKnzz4mM2Zah15Hh3oDdmLt+oP5zxFkJFTt8277OchFJv2J3rzOeFdvLWL9kc8QjS8OZCA==<br>");
+        //     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        //     // ~~~[ AuthDB Process Part : Update for Ciphered PSW of managerID Record in MangerAuthDB ]~~~~~~~~~~~~~~~~~~~~~
+        //     // AuthVo authDBFPFieldUpdate = moaServerAuthDBLib.getUserAuth(new
+        //     // String(Base64.decode(managerIdBase64Str))); // MoaAuthDao.jar Call(DB)
+        //     // authDBFPFieldUpdate.setCipheredPsw(newCipheredPswBase64Str);
+        //     // moaServerAuthDBLib.updateUserAuth(authDBFPFieldUpdate);
+        //     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        //     newCipheredUpdateSFStr = "0x06070";
+        // } else {
+        //     newCipheredUpdateSFStr = "0x06071";
+        //     System.out.println("Error ---> CipherdPsw Update to Manager AuthDB Failed. Exist Psw Re-Input!");
+        // }
+        // String chagePswResponseManagerIdMsgGenStr = moaServerManagerAuthLib
+        //         .IdPswChangePswResponseMsgGenProcess(currentPswVerifySFStr, newCipheredUpdateSFStr);
+
+        document.write("[**] 3.3 (ChangePSW: Client PC <- ManagerAuthServer) [managerID] Change Psw Response Msg Gen[String] : 4D4F413002$0x6060$0x06070<br>");
+
+        // 3.4 [Only Client PC] ID/PSW unRegist Response Msg Parser
+        let chagePswResponseMsgParserResultStr = MoaClientCoreAuthLib.coreMsgPacketParser("4D4F413002$0x6060$0x06070");
+        document.write("[**] 3.4.0 (ChangePSW: Client PC) [managerID] Change Psw Response Response Msg Parser Result[String] : " + chagePswResponseMsgParserResultStr + "<br>");
+        let changePswResponseMsgSplit = chagePswResponseMsgParserResultStr.split('$');
+        let existPswVerifyResult = changePswResponseMsgSplit[0];
+        let cipheredPswUpdateResult = changePswResponseMsgSplit[1];
+        if (existPswVerifyResult.indexOf("0x6060") === 0 && cipheredPswUpdateResult.indexOf("0x06070") === 0)
+            document.write("[**] 3.4 (ChangePSW: Client PC) [managerID] Change Psw Success");
+        else
+            docuemnt.write("[**] 3.4 (ChangePSW: Client PC) [managerID] Change Psw Fail. Change Psw Re-try!");
+    </script>
+</body>
+
+</html>
