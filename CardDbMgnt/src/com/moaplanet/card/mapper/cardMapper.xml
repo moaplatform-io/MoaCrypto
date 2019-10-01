@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.moaplanet.card.dto">
+
+
+    <insert id="addCardInfo" parameterType="CardVo">
+        INSERT INTO TB_USER_CARDS (MEMBER_ID				  
+									,SEQ							  
+									,BILL_KEY					
+									,CARD_TOKEN				
+									,SECRET_KEY				
+									,CARD_NICK				  
+									,CREATE_DATE
+								)	
+				VALUES  
+						(#{MEMBER_ID       }
+						,#{SEQ             }
+						,#{BILL_KEY        }
+						,#{CARD_TOKEN      }
+						,#{SECRET_KEY      }
+						,#{CARD_NICK       }
+						,CURRENT_TIMESTAMP(3)
+						)
+    </insert>
+
+  
+    <select id="getCardInfo" parameterType="CardVo" resultType="CardVo">
+        SELECT * FROM TB_USER_CARDS
+         WHERE 
+         	CARD_TOKEN=#{CARD_TOKEN}
+    </select>
+    
+   
+    <select id="getUserCardList" parameterType="String" resultType="CardVo">
+        SELECT CARD_TOKEN
+        		, SEQ
+        		, MEMBER_ID
+        		, CARD_NICK
+        		, ISSUER_NM
+          FROM TB_USER_CARDS
+         WHERE MEMBER_ID=#{MEMBER_ID}
+           AND USE_FLAG = "Y" 
+    </select>
+
+    <update id="updateCardInfo" parameterType="CardVo">
+		UPDATE TB_USER_CARDS SET
+			 SEQ					= #{SEQ			}
+			,CNO					= #{CNO			}
+			,BILL_KEY				= #{BILL_KEY	} 
+			,CARD_TOKEN				= #{CARD_TOKEN	} 
+			,SECRET_KEY				= #{SECRET_KEY	} 
+			,CARD_NICK				= #{CARD_NICK	}
+			,USE_FLAG				= #{USE_FLAG	} 
+			,LAST_MODIFY_DATE = CURRENT_TIMESTAMP(3)
+		WHERE CARD_TOKEN=#{CARD_TOKEN}
+    </update>
+    
+    
+    <select id="confirmkUserCardPwd" parameterType="CardVo" resultType="int">
+        SELECT count(*)
+          FROM TB_USER_CARDS
+         WHERE MEMBER_ID = #{MEM BER_ID}
+           AND SECRET_KEY = #{SECRET_KEY}
+           AND USE_FLAG = "Y"
+    </select>
+   
+    <delete id="delCardInfo" parameterType="CardVo">
+    		<!-- 
+    			not available 
+    		-->
+    </delete>
+    
+    
+    <update id="changePwdSimplePay" parameterType="CardVo">
+		UPDATE TB_USER_CARDS SET
+			 SECRET_KEY	  		= #{SECRET_KEY	} 
+			,LAST_MODIFY_DATE 	= CURRENT_TIMESTAMP(3)
+		WHERE MEMBER_ID=#{MEMBER_ID}
+    </update>
+
+
+
+    <insert id="addCardChgPwdHis" parameterType="CardChgPwdHisVo">
+
+        INSERT INTO TB_USER_CARDS_PWD_HISTORY (MEMBER_ID				  
+												,CHANGE_CODE							  
+												,CHANGE_REASON
+												,CREATE_DATE				
+												)	
+				VALUES  
+						(#{MEMBER_ID}				  
+						,#{CHANGE_CODE}					  
+						,#{CHANGE_REASON}
+						,CURRENT_TIMESTAMP(3)
+						)
+    </insert>
+
+</mapper>

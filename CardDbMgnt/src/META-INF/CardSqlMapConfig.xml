@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE configuration
+
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+	<typeAliases> 
+		<typeAlias alias="CardVo" type="com.moaplanet.card.dto.CardVo" /> 
+		<typeAlias alias="CardChgPwdHisVo" type="com.moaplanet.card.dto.CardChgPwdHisVo" />
+	</typeAliases>
+
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC" />
+            <dataSource type="POOLED">
+                <property name="driver" value="org.mariadb.jdbc.Driver" />
+                <property name="url" value="jdbc:mariadb://172.30.1.33:3306/SecureDB" />
+                <property name="username" value="root" />
+                <property name="password" value="admin00" />
+                
+                <property name="poolMaximumActiveConnections" value="4"/>
+            	<property name="poolMaximumIdleConnections" value="4"/>
+            	<property name="poolMaximumCheckoutTime" value="20000"/>
+	            <property name="poolPingEnabled" value="true"/>
+	            <property name="poolPingQuery" value="select 1"/>
+	            <property name="poolPingConnectionsNotUsedFor" value="10000"/>
+	            <property name="poolTimeToWait" value="15000"/>
+            </dataSource>
+        </environment>
+
+
+		<environment id="envCard">
+            <transactionManager type="JDBC" />
+            <dataSource type="POOLED">
+                <property name="driver" value="org.mariadb.jdbc.Driver" />
+                <property name="url" value="jdbc:mariadb://yea1202.synology.me:43307/maria" />
+                <property name="username" value="maria" />
+                <property name="password" value="ahdk8558*" />
+                
+                <property name="poolMaximumActiveConnections" value="10"/>
+                				 
+            	<property name="poolMaximumIdleConnections" value="3"/>
+            	<property name="poolMaximumCheckoutTime" value="20000"/>
+	            <property name="poolPingEnabled" value="true"/>
+	            <property name="poolPingQuery" value="select 1"/>
+	            <property name="poolPingConnectionsNotUsedFor" value="10000"/>
+	            <property name="poolTimeToWait" value="15000"/>
+            </dataSource>
+        </environment>
+
+
+    </environments>
+
+    <mappers>
+
+        <mapper resource="com/moaplanet/card/mapper/cardMapper.xml" />
+
+    </mappers>
+
+</configuration>
